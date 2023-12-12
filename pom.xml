@@ -16,6 +16,7 @@
 
   <modules>
     <module>node-configuration</module>
+    <module>node-discovery</module>
   </modules>
 
 </project>
