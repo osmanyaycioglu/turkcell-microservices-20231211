@@ -1,0 +1,34 @@
+{
+	"info": {
+		"_postman_id": "15ba9d33-01b6-49da-acb1-0f2207cf8071",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11787944"
+	},
+	"item": [
+		{
+			"name": "configserver1",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Configserver2",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Configserver3",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
