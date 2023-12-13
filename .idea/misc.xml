@@ -7,6 +7,8 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/node-configuration/pom.xml" />
         <option value="$PROJECT_DIR$/ms-order/pom.xml" />
+        <option value="$PROJECT_DIR$/ms-common/pom.xml" />
+        <option value="$PROJECT_DIR$/node-apigw-order/pom.xml" />
       </list>
     </option>
   </component>

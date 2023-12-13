@@ -1,0 +1,23 @@
+server:
+  port: ${aport:8080}
+spring:
+  application:
+    name: api-order
+  cloud:
+    config:
+      discovery:
+        enabled: true
+    gateway:
+      routes:
+        - id: orderRoute
+          uri: lb://ORDER
+          predicates:
+            - Path=/api/v1/order/**
+eureka:
+  client:
+    fetch-registry: true
+    healthcheck:
+      enabled: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://127.0.0.1:5555/eureka/

@@ -1,0 +1,8 @@
+eureka:
+    client:
+        fetch-registry: true
+        healthcheck:
+            enabled: true
+        register-with-eureka: true
+        service-url:
+            defaultZone: http://127.0.0.1:5555/eureka/

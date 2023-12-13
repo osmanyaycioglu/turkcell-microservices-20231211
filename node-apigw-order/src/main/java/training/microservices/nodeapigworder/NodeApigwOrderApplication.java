@@ -1,18 +1,15 @@
-package training.microservices.msorder;
+package training.microservices.nodeapigworder;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.context.annotation.Import;
-import training.microservices.mscommon.error.ErrorConfig;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@Import({ErrorConfig.class})
-public class MsOrderApplication {
+public class NodeApigwOrderApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MsOrderApplication.class,
+        SpringApplication.run(NodeApigwOrderApplication.class,
                               args);
     }
 
