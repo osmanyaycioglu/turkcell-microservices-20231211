@@ -19,6 +19,9 @@
     <module>node-discovery</module>
     <module>ms-common</module>
     <module>ms-order</module>
+    <module>node-apigw-order</module>
+    <module>ms-customer-api</module>
+    <module>ms-customer</module>
   </modules>
 
 </project>
