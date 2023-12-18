@@ -1,28 +1,67 @@
 package training.microservices.msorder.integration.customer;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.netflix.eureka.EurekaDiscoveryClient;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import training.microservices.customer.Customer;
+import training.microservices.mscommon.error.ClientCallException;
+import training.microservices.mscommon.error.ErrorObj;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @RequiredArgsConstructor
 public class CustomerQueryIntegration {
-    private final RestTemplate restTemplate;
+    private final RestTemplate             restTemplate;
     private final ICustomerQueryRestClient customerQueryRestClient;
-    private final EurekaDiscoveryClient eurekaDiscoveryClient;
+    private final EurekaDiscoveryClient    eurekaDiscoveryClient;
 
-
+    @Retry(name = "customer-query")
+    @CircuitBreaker(name = "cc-customer-query")
     public Customer findCustomer(String phoneNumber) {
-        Customer customerLoc = restTemplate.getForObject(
+        return restTemplate.getForObject(
                 "http://CUSTOMER/api/v1/customer/query/find/by/phone?number="
                 + phoneNumber,
                 Customer.class);
+    }
+
+    public Customer findCustomerForEyesOnly(String phoneNumber) {
+        Customer customerLoc = null;
+        try {
+            customerLoc = restTemplate.getForObject(
+                    "http://CUSTOMER/api/v1/customer/query/find/by/phone?number="
+                    + phoneNumber,
+                    Customer.class);
+        } catch (RestClientResponseException eParam) {
+            ObjectMapper objectMapperLoc = new ObjectMapper();
+            try {
+                ErrorObj errorObjLoc = objectMapperLoc.readValue(eParam.getResponseBodyAsByteArray(),
+                                                                 ErrorObj.class);
+                Integer errorCodeLoc = errorObjLoc.getErrorCode();
+                switch (errorCodeLoc) {
+                    case 1024:
+                    case 1025:
+                        return null;
+                    case 1048:
+                    case 1049:
+                        throw new ClientCallException(errorObjLoc.getErrorDesc(),
+                                                      errorObjLoc);
+                }
+            } catch (IOException exParam) {
+                throw new RuntimeException(exParam);
+            }
+            throw new RuntimeException(eParam);
+        }
 
         return customerLoc;
     }
@@ -48,8 +87,6 @@ public class CustomerQueryIntegration {
                                                                 Customer.class);
             return customerLoc;
         }
-        return null;
-
         return null;
     }
 

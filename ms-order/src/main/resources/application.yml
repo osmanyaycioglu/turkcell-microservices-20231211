@@ -1,0 +1,57 @@
+server:
+  error:
+    include-binding-errors: always
+    include-exception: true
+    include-message: always
+  port: ${aport:10000}
+spring:
+  application:
+    name: order
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: false
+        max-retries-on-next-service-instance: 3
+        max-retries-on-same-service-instance: 0
+        retry-on-all-exceptions: false
+        retryable-exceptions:
+          - java.lang.IllegalStateException
+          - java.lang.IllegalAccessException
+  config:
+    import: configserver:http://127.0.0.1:8888
+resilience4j:
+  retry:
+    instances:
+      customer-query:
+        base-config: my-config
+        retry-exception-predicate: training.microservices.msorder.resilience.CheckClientExceptions
+        result-predicate: training.microservices.msorder.resilience.CustomerQueryFindCustomerPredicate
+    configs:
+      my-config:
+        max-attempts: 3
+        wait-duration: 10ms
+        exponential-backoff-multiplier: 2
+        exponential-max-wait-duration: 5s
+        enable-exponential-backoff: true
+  circuitbreaker:
+    instances:
+      cc-customer-query:
+        sliding-window-type: count_based
+        sliding-window-size: 20
+        minimum-number-of-calls: 10
+        failure-rate-threshold: 30
+        wait-duration-in-open-state: 2s
+        automatic-transition-from-open-to-half-open-enabled: false
+        permitted-number-of-calls-in-half-open-state: 5
+        allow-health-indicator-to-fail: true
+        slow-call-duration-threshold: 500ms
+        slow-call-rate-threshold: 30
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
