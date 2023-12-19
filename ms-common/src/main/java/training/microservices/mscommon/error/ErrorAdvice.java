@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -47,10 +48,20 @@ public class ErrorAdvice {
                        .build();
     }
 
+    @ExceptionHandler(RemoteCallException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorObj handleExp(RemoteCallException exp) {
+        return ErrorObj.builder()
+                       .withErrorDesc("Error on rest client")
+                       .withErrorCode(3066)
+                       .withSubErrors(Collections.singletonList(exp.getErrorObj()))
+                       .build();
+    }
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorObj> handleExp(Exception exp) {
-        if (exp instanceof NullPointerException){
+        if (exp instanceof NullPointerException) {
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
                                  .body(ErrorObj.builder()
                                                .withErrorDesc(exp.getMessage())
@@ -64,5 +75,6 @@ public class ErrorAdvice {
                                            .withErrorCode(5000)
                                            .build());
     }
+
 
 }

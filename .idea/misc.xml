@@ -11,6 +11,7 @@
         <option value="$PROJECT_DIR$/node-apigw-order/pom.xml" />
         <option value="$PROJECT_DIR$/ms-customer/pom.xml" />
         <option value="$PROJECT_DIR$/ms-customer-api/pom.xml" />
+        <option value="$PROJECT_DIR$/ms-fraud/pom.xml" />
       </list>
     </option>
   </component>

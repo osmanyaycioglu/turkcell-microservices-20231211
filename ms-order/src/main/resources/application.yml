@@ -26,6 +26,8 @@ resilience4j:
         base-config: my-config
         retry-exception-predicate: training.microservices.msorder.resilience.CheckClientExceptions
         result-predicate: training.microservices.msorder.resilience.CustomerQueryFindCustomerPredicate
+      customer-provision:
+        base-config: my-config
     configs:
       my-config:
         max-attempts: 3
@@ -42,10 +44,10 @@ resilience4j:
         failure-rate-threshold: 30
         wait-duration-in-open-state: 2s
         automatic-transition-from-open-to-half-open-enabled: false
-        permitted-number-of-calls-in-half-open-state: 5
-        allow-health-indicator-to-fail: true
+        permitted-number-of-calls-in-half-open-state: 10
+        #allow-health-indicator-to-fail: true
         slow-call-duration-threshold: 500ms
-        slow-call-rate-threshold: 30
+        slow-call-rate-threshold: 50
 management:
   endpoints:
     web:
