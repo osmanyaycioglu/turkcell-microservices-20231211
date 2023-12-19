@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import training.microservices.customer.Customer;
 import training.microservices.msorder.facades.CustomerFacade;
 import training.microservices.msorder.integration.customer.CustomerIntegration;
+import training.microservices.msorder.integration.notify.NotifyIntegration;
 import training.microservices.msorder.order.services.models.Order;
 
 @Service
@@ -12,6 +13,7 @@ import training.microservices.msorder.order.services.models.Order;
 public class OrderProvisionService {
     private final CustomerIntegration customerQueryIntegration;
     private final CustomerFacade      customerFacade;
+    private final NotifyIntegration   notifyIntegration;
 
 
     public String placeOrder(Order orderParam) {
@@ -23,6 +25,9 @@ public class OrderProvisionService {
         Customer customerLoc = customerFacade.checkAndCreateCustomer(orderParam.getPhoneNumber(),
                                                                      orderParam.getCustomerName(),
                                                                      orderParam.getCustomerSurname());
+        notifyIntegration.sendSMS("Order alındı",
+                                  orderParam.getPhoneNumber(),
+                                  "message.sms.tr.local");
         return "Feign Sipariş verildi : " + customerLoc.getFirstName() + " " + customerLoc.getLastName();
     }
 }
