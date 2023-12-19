@@ -20,8 +20,8 @@ public class CustomerQueryController implements ICustomerQueryController {
         return Customer.builder()
                        .withCustomerId(randomLoc.nextLong())
                        .withCustomerNumber(number)
-                       .withFirstName("Test" + randomLoc.nextInt())
-                       .withLastName("Testor-" + port)
+                       .withFirstName("Test" + port )
+                       .withLastName("Testor-" + randomLoc.nextInt())
                        .build();
     }
 

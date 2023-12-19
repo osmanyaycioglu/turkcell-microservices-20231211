@@ -11,6 +11,18 @@ import training.microservices.msorder.integration.customer.CustomerIntegration;
 public class CustomerFacade {
     private final CustomerIntegration customerIntegration;
 
+    public Customer checkAndCreateCustomerFallback(String phoneNumber,
+                                                   String name,
+                                                   String surname,
+                                                   Exception exp) {
+        return Customer.builder()
+                       .withCustomerNumber(phoneNumber)
+                       .withFirstName(name)
+                       .withLastName(surname)
+                       .build();
+
+    }
+
     @CircuitBreaker(name = "cc-customer-query", fallbackMethod = "checkAndCreateCustomerFallback")
     public Customer checkAndCreateCustomer(String phoneNumber,
                                            String name,
@@ -24,18 +36,8 @@ public class CustomerFacade {
                                   .build();
             customerIntegration.addCustomer(customerLoc);
         }
+        String stringLoc = customerIntegration.addCustomer(customerLoc);
+        customerLoc.setLastName(stringLoc);
         return customerLoc;
-    }
-
-    public Customer checkAndCreateCustomerFallback(String phoneNumber,
-                                                   String name,
-                                                   String surname,
-                                                   Exception exp) {
-        return Customer.builder()
-                       .withCustomerNumber(phoneNumber)
-                       .withFirstName(name)
-                       .withLastName(surname)
-                       .build();
-
     }
 }
