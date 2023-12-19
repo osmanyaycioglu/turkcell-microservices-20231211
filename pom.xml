@@ -22,6 +22,7 @@
     <module>node-apigw-order</module>
     <module>ms-customer-api</module>
     <module>ms-customer</module>
+    <module>ms-fraud</module>
   </modules>
 
 </project>
